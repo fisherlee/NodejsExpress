@@ -1,0 +1,14 @@
+<% include header %>
+
+
+	<h1 class="page-header"> <%= description %> <h1>
+	<p> 
+	<ul>
+		<% list.forEach(function (item) {%>
+		<li><%= item.phone %>, <%= item.area %></li>
+		<% }) %>
+	</ul>
+
+	 
+
+<% include footer %>

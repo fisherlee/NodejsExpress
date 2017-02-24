@@ -1,0 +1,17 @@
+<% include header %>
+
+
+	<h1 class="page-header"> <%= jenkinsTitle %> <h1>
+	<p> 
+	<ul>
+		<% ducomentsResult.forEach(function (item) {%>
+		<li style="color:blue;font-size:14px">
+		<a href="/mobile.csv" target="_bank"><%= item %></a>
+		</li>
+		<% }) %>
+	</ul>
+	 
+
+	 
+
+<% include footer %>

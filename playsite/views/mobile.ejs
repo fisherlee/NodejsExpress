@@ -1,0 +1,128 @@
+<% include header %>
+
+
+	<h2 class="page-header"> <%= mobileTitle %> <h2>
+
+  <form class="form-signin" role="form" method="post" enctype='multipart/form-data'>
+    <h4 class="form-signin-heading">上传文件</h4>
+    <h5 class="form-signin-heading"><%= upload_success%></h5>
+    <input id="csv" name="csvFile" type="file" class="form-control" />   
+    <button id="btnSub" class="btn btn-primary" type="submit">上 传</button>
+    </form>
+  
+  <br/>
+  <button class="btn btn-info" id="btn1">原始数据</button>
+  <button class="btn btn-success" id="btn2">查找结果</button>
+
+  <p>
+  <div id='loading'>
+  </div>
+<p>
+  
+
+  <div class="table-responsive" style="font-size:18px">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>手机号</th>
+          <th>运营商</th>
+          <th>地区</th>
+        </tr>
+      </thead>
+
+      <tbody id='tb'>
+  
+      </tbody>
+    </table>
+  </div>
+
+<% include footer %>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+
+
+    $('#btnSub').on('click',function(){   
+    var req = new XMLHTTPRequest();
+req.onload = function () {
+    console.log("dddd",req.status);  // 响应码
+    console.log(req.responseText);  // 响应字符
+};
+
+      var csvVal = $('#csv').val();
+      
+      if(csvVal.length == 0) {
+        alert('请选择要上传的csv文件');               
+        return false;
+      }
+
+       var extName = csvVal.substring(csvVal.lastIndexOf('.'), csvVal.length).toLowerCase();
+
+      if(extName != '.csv') {
+        alert('只支持csv格式的文件');
+        return false;        
+      }
+
+      $.get('/uploadCSV', function(data){
+        alert(data);
+      });
+      
+      return true;        
+    })
+
+  
+    $('#btn1').on('click', function(){
+
+      $('#loading').append('<div id="spin" class="fa fa-spinner fa-pulse"></div>');
+      $('#loading').append('<div style="color:red;font-size:14px">查询中，请等待...</div>');
+
+      $.get('/mobile_original', function(data){
+        alert(data);
+        //$(".ch4").html('dddd');
+        //location.href = '/mobile';
+        //$("table tr").eq(0).find('td').eq(1).html("123333");
+
+
+        $('#tb tr td').remove();
+        if (data.length > 0) {
+ 
+          for (var i = 0; i < data.length; i++) {
+
+            var items = data[i];
+            if (items.length == 3) {
+              var idx = String(i);
+              var mobile = items[0];
+              var com = items[1];
+              var addr = items[2];
+              var item = '<tr id="list"><td>'+idx+'</td><td>'+mobile+'</td><td>'+com+'</td><td>'+addr+'</td></tr>';
+              $('#tb').append(item);
+            };
+            
+          }
+
+        }
+
+        $('#loading').empty();
+
+      });
+
+    });
+
+    $('#btn2').click(function(){      
+
+      $.get('/queryData', function(data){
+        location.href = '/mobile';
+        $("#ch4").val('dddd');//赋值
+        alert(data);
+      });
+
+    });
+
+  
+
+  });
+
+</script>
